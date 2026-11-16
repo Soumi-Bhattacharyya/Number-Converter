@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number converter</title>
+    <link rel="stylesheet" href="mainpage.css">
+    <link href="https://www.flaticon.com/search?word=three%20dots%20button"></link>
+</head>
+<body>
+    <div id="container">
+        <h1>Number Converter</h1>
+        <div id="glow"></div>
+        <form>
+        <div class="from">
+        <p style="color: beige; width: 50%;text-shadow:0 0 15px rgba(255, 255, 255, 0.3) ;font-size: 1.1rem;">From</p>
+        <select id="From">
+        <option value="Decimal">Decimal</option>
+        <option value="Binary">Binary</option>
+        <option value="Octal">Octal</option>
+        <option value="Hexadecimal">Hexadecimal</option>
+        </select>
+        <p style="color: beige; width: 50%;text-shadow:0 0 15px rgba(255, 255, 255, 0.3) ;font-size: 1.1rem;">Enter value</p>
+        <input id="number" type="text" placeholder="Enter value">
+        </div>
+        <div id="to">
+        <p style="color: beige; width: 50%;text-shadow:0 0 15px rgba(255, 255, 255, 0.3) ;font-size: 1.1rem;">To</p>
+        <select id="To">
+        <option value="Decimal">Decimal</option>
+        <option value="Binary">Binary</option>
+        <option value="Octal">Octal</option>
+        <option value="Hexadecimal">Hexadecimal</option>
+        </select>
+        <p style="color: beige; width: 50%;text-shadow:0 0 15px rgba(255, 255, 255, 0.3);margin-bottom: 0px;font-size: 1.1rem;">Output</p>
+        <p id="output"></p>
+        </div>
+
+        <button>Convert</button>
+        </form>
+
+    </div>
+        <script>
+const button = document.querySelector('button');
+ let amt = document.querySelector('input');
+const dropDownFrom = document.getElementById('From');
+const dropDownTo = document.getElementById('To');
+const msg=document.getElementById("output");
+button.addEventListener("click", (e) => {
+    e.preventDefault();
+    const currentAmount = (amt.value);
+    const currentFrom = dropDownFrom.value;
+    const currentTo = dropDownTo.value;
+
+    console.log("Processing:", currentAmount, currentFrom, currentTo);
+    getConv(currentAmount, currentFrom, currentTo);
+});
+function getConv(amountValue, fromValue, toValue) {
+    var Result
+    if (fromValue === "Decimal" && toValue === "Binary") {
+    Result=dectobin(amountValue);
+    
+    }
+    if(fromValue === "Decimal" && toValue === "Octal"){
+        Result=dectooc(amountValue);
+    }
+    if(fromValue==="Decimal"&& toValue==="Hexadecimal"){
+        Result=dectohex(amountValue);
+    }
+    if(fromValue==="Binary"&& toValue==="Decimal"){
+        Result=bintodec(amountValue);
+    }
+    if(fromValue==="Octal"&& toValue==="Decimal"){
+        Result=octodec(amountValue);
+}
+if(fromValue==="Binary"&& toValue==="Octal"){
+        Result=bintooc(amountValue);
+}
+if(fromValue==="Binary"&& toValue==="Hexadecimal"){
+        Result=bintohex(amountValue);
+}if(fromValue==="Octal"&& toValue==="Binary"){
+        Result=octobin(amountValue);}
+        if(fromValue==="Octal"&& toValue==="Hexadecimal"){
+        Result=octohex(amountValue);}
+if(fromValue==="Hexadecimal"&& toValue==="Decimal"){
+        Result=hextodec(amountValue);}
+if(fromValue==="Hexadecimal"&& toValue==="Binary"){
+        Result=hextobin(amountValue);    
+}if(fromValue==="Hexadecimal"&& toValue==="Octal"){
+        Result=hextooc(amountValue);}            
+console.log(Result);
+msg.innerText=`${toValue} value of ${amountValue} is = ${Result}`;
+ }
+function dectobin(amountValue){
+if (amountValue === 0) {
+            console.log("0");
+            return "0";
+        }
+        let precession=10;
+        let isNegative=amountValue<0;
+        amountValue=Math.abs(amountValue);
+        let integer=Math.floor(amountValue);
+        let fraction= amountValue-integer;
+        let intbin=integer.toString(2);
+        let frabin="";
+        while(fraction>0 && frabin.length<precession){
+            fraction*=2;
+            let bit=Math.floor(fraction);
+            frabin+=bit;
+            fraction-=bit;
+        }
+        let binres =intbin;
+        if(frabin.length>0){
+            binres+="."+frabin;
+        } 
+        return isNegative?"1"+" "+ binres:"0"+" "+binres;
+    }
+    function dectooc(amountValue){
+        if (amountValue === 0) {
+            console.log("0");
+            return "0";
+        }
+
+        let rem = [];
+        let tempAmount = amountValue;
+        while (tempAmount>0) {
+            rem.push(tempAmount % 8);
+            tempAmount = Math.floor(tempAmount / 8);
+        }
+        let ocres = rem.reverse().join("");
+        return ocres;
+    }
+  function dectohex(amountValue){
+    if (amountValue === 0) {
+            console.log("0");
+            return "0";
+        }
+
+        let rem = [];
+        let tempAmount = amountValue;
+
+        while (tempAmount> 0) {
+            if(tempAmount%16<=9){
+            rem.push(tempAmount % 16);}
+            else{
+                if(tempAmount%16===10){
+                    rem.push("A");
+                }
+                if(tempAmount%16===11){
+                    rem.push("B");
+                }
+                if(tempAmount%16===12){
+                    rem.push("C");
+                }
+                if(tempAmount%16===13){
+                    rem.push("D");
+                }
+                if(tempAmount%16===14){
+                    rem.push("E");
+                }
+                if(tempAmount%16===15){
+                    rem.push("F");
+                }}
+            tempAmount = Math.floor(tempAmount / 16);
+        }
+
+        let hexres = rem.reverse().join("");
+        return hexres;
+    }
+   function bintodec(_amountValue){
+    let n=[];
+     n=String(_amountValue);
+     return parseInt(n,2); }
+     function octodec(_amountValue){
+        let n=[]
+     n=String(_amountValue);
+      b= parseInt(n,8); 
+    return b;}
+     function bintooc(_amountValue){
+     c=bintodec(_amountValue);
+     m=dectooc(c);
+     return m;
+    }
+function bintohex(_amountValue){
+    d=bintodec(_amountValue);
+    return dectohex(d);
+}
+function octobin(_amountValue){
+b=octodec(_amountValue);
+return dectobin(b);}
+function octohex(_amountValue){
+    b=octodec(_amountValue);
+    return dectohex(b);}
+function hextodec(){
+ raw=document.getElementById("number").value.trim() ;
+ return parseInt(raw,16);
+} 
+function hextobin(_amountValue){
+    h=hextodec(_amountValue);
+    return dectobin(h);
+}
+function hextooc(_amountValue){
+    h=hextodec(_amountValue);
+    return dectooc(h);
+}
+</script>
+        
+</body>
+</html>
